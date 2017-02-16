@@ -1,0 +1,7 @@
+digraph "classes_Envios" {
+charset="utf-8"
+rankdir=BT
+"2" [shape="record", label="{EnvioSms|date_create : DateTimeField\ldate_update : DateTimeField\lsms : CharField\luser : CharField\l|}"];
+"3" [shape="record", label="{ListaGroup|date_create : DateTimeField\ldate_update : DateTimeField\lid_g : IntegerField\lid_l : IntegerField\luser : CharField\l|}"];
+"4" [shape="record", label="{ListEnvio|status : CharField\lid_g : IntegerField\ldate_update : DateTimeField\ldate_create : DateTimeField\luser : CharField\lgrupo : CharField\l|}"];
+}

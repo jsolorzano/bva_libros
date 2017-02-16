@@ -1,0 +1,23 @@
+digraph "classes_General" {
+charset="utf-8"
+rankdir=BT
+"4" [shape="record", label="{Directivos|status : CharField\lcargo : ForeignKey\larea : ForeignKey\ldate_update : DateTimeField\lcoord : CharField\ldate_create : DateTimeField\lmunicipio : IntegerField\lcod_directivo : CharField\lestado : ForeignKey\lcedula : CharField\luser : CharField\l|}"];
+"6" [shape="record", label="{Area|cargo : ForeignKey\larea : CharField\ldate_update : DateTimeField\ldate_create : DateTimeField\luser : CharField\lcod_area : CharField\l|}"];
+"8" [shape="record", label="{Linea|estado : ForeignKey\ldate_update : DateTimeField\lmunicipio : IntegerField\lcod_linea : CharField\ldireccion : CharField\ldate_create : DateTimeField\luser : CharField\ltelefono : CharField\lparroquia : IntegerField\llinea : CharField\lpresidente : CharField\l|}"];
+"10" [shape="record", label="{Circuitos|date_update : DateTimeField\ldate_create : DateTimeField\lcircuito : CharField\luser : CharField\lcodigo : CharField\lestado : ForeignKey\l|}"];
+"12" [shape="record", label="{Municipio|cod_municipio : IntegerField\ldate_update : DateTimeField\ldate_create : DateTimeField\lcircuito : ForeignKey\luser : CharField\lestado : ForeignKey\lmunicipio : CharField\l|}"];
+"14" [shape="record", label="{Dominio|status : CharField\lestablecer : CharField\ldate_update : DateTimeField\ldate_create : DateTimeField\luser : CharField\ldominio : CharField\ldescripcion : CharField\l|}"];
+"16" [shape="record", label="{Parroquia|cod_parroquia : IntegerField\ldate_update : DateTimeField\ldate_create : DateTimeField\luser : CharField\lestado : ForeignKey\lparroquia : CharField\lmunicipio : IntegerField\l|}"];
+"18" [shape="record", label="{Bitacora|fecha : DateTimeField\laccion : CharField\lusuario : CharField\l|}"];
+"20" [shape="record", label="{EnvioSms|date_create : DateTimeField\ldate_update : DateTimeField\lsms : CharField\luser : CharField\l|}"];
+"21" [shape="record", label="{ListaGroup|date_create : DateTimeField\ldate_update : DateTimeField\lid_g : IntegerField\lid_l : IntegerField\luser : CharField\l|}"];
+"22" [shape="record", label="{ListEnvio|status : CharField\lid_g : IntegerField\ldate_update : DateTimeField\ldate_create : DateTimeField\luser : CharField\lgrupo : CharField\l|}"];
+"24" [shape="record", label="{Cargo|cargo : CharField\lnivel : CharField\ldate_update : DateTimeField\ldate_create : DateTimeField\luser : CharField\lcod_cargo : CharField\l|}"];
+"26" [shape="record", label="{PerfilesUsuario|user_accion : CharField\luser : OneToOneField\l|}"];
+"28" [shape="record", label="{CargaFamiliar|parentesco : CharField\lnac : CharField\lapellido : CharField\lagremiado : ForeignKey\ledad : CharField\ldate_update : DateTimeField\lcedula : CharField\ldate_create : DateTimeField\lcod_familiar : CharField\luser : CharField\lnombre : CharField\ltelefono : CharField\ldiscapacidad : CharField\l|}"];
+"30" [shape="record", label="{Vehiculo|propietario : CharField\lserial_m : CharField\lagremiado : ForeignKey\lserial_c : CharField\ldate_update : DateTimeField\lmarca : CharField\lc_vehiculo : CharField\ldate_create : DateTimeField\lanyo : CharField\lmodelo : CharField\luser : CharField\lcod_vehiculo : CharField\ltraspaso : CharField\lespecifique : CharField\ln_nom : CharField\lplaca : CharField\lcolor : CharField\lcedula : IntegerField\l|}"];
+"32" [shape="record", label="{SituacionHab|date_create : DateTimeField\ldate_update : DateTimeField\lcod_situacion : CharField\lsituacion : CharField\luser : CharField\l|}"];
+"34" [shape="record", label="{Estado|date_create : DateTimeField\lcod_estado : IntegerField\ldate_update : DateTimeField\lestado : CharField\luser : CharField\l|}"];
+"36" [shape="record", label="{FichaPersonal|es_organizacion : CharField\lp_nombre : CharField\lpoliza_rcv : CharField\ldiscapcidad : CharField\ldate_create : DateTimeField\lfecha_nac : DateField\ldireccion : TextField\lt_camisa : CharField\lp_apellido : CharField\lc_agremiado : CharField\lins_cne : CharField\ldate_update : DateTimeField\lpartido_p : ForeignKey\lnacionalidad : CharField\ls_nombre : CharField\llicencia : CharField\ls_habitacional : ForeignKey\lstatus : CharField\lfoto : ImageField\lpartido : CharField\lnom_linea : ForeignKey\lsexo : CharField\lorganizacion : CharField\les_discapacidad : CharField\luser : CharField\ltlf_local : CharField\lestado : ForeignKey\lparroquia : IntegerField\lmunicipio : IntegerField\ledad : IntegerField\ls_apellido : CharField\ltlf_movil : CharField\lcedula : IntegerField\lcertificado : CharField\l|}"];
+"38" [shape="record", label="{Partido|status : CharField\ldate_update : DateTimeField\ldate_create : DateTimeField\lcod_partido : CharField\luser : CharField\ldescripcion : CharField\lnombre : CharField\l|}"];
+}

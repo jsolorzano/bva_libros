@@ -1,0 +1,5 @@
+digraph "classes_Login" {
+charset="utf-8"
+rankdir=BT
+"2" [shape="record", label="{PerfilesUsuario|user_accion : CharField\luser : OneToOneField\l|}"];
+}

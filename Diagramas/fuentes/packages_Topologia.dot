@@ -1,0 +1,7 @@
+digraph "packages_Topologia" {
+charset="utf-8"
+rankdir=BT
+"3" [shape="box", label="topologia.parroquias.models"];
+"5" [shape="box", label="topologia.estados.models"];
+"7" [shape="box", label="topologia.municipios.models"];
+}

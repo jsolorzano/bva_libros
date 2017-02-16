@@ -1,0 +1,5 @@
+digraph "classes_SituacionHabitacional" {
+charset="utf-8"
+rankdir=BT
+"2" [shape="record", label="{SituacionHab|date_create : DateTimeField\ldate_update : DateTimeField\lcod_situacion : CharField\lsituacion : CharField\luser : CharField\l|}"];
+}

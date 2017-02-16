@@ -1,0 +1,5 @@
+digraph "classes_Linea" {
+charset="utf-8"
+rankdir=BT
+"2" [shape="record", label="{Linea|estado : ForeignKey\ldate_update : DateTimeField\lmunicipio : IntegerField\lcod_linea : CharField\ldireccion : CharField\ldate_create : DateTimeField\luser : CharField\ltelefono : CharField\lparroquia : IntegerField\llinea : CharField\lpresidente : CharField\l|}"];
+}

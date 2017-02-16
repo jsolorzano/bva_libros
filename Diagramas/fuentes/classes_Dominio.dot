@@ -1,0 +1,5 @@
+digraph "classes_Dominio" {
+charset="utf-8"
+rankdir=BT
+"2" [shape="record", label="{Dominio|status : CharField\lestablecer : CharField\ldate_update : DateTimeField\ldate_create : DateTimeField\luser : CharField\ldominio : CharField\ldescripcion : CharField\l|}"];
+}

@@ -1,0 +1,5 @@
+digraph "classes_Registro" {
+charset="utf-8"
+rankdir=BT
+"2" [shape="record", label="{FichaPersonal|es_organizacion : CharField\lp_nombre : CharField\lpoliza_rcv : CharField\ldiscapcidad : CharField\ldate_create : DateTimeField\lfecha_nac : DateField\ldireccion : TextField\lt_camisa : CharField\lp_apellido : CharField\lc_agremiado : CharField\lins_cne : CharField\ldate_update : DateTimeField\lpartido_p : ForeignKey\lnacionalidad : CharField\ls_nombre : CharField\llicencia : CharField\ls_habitacional : ForeignKey\lstatus : CharField\lfoto : ImageField\lpartido : CharField\lnom_linea : ForeignKey\lsexo : CharField\lorganizacion : CharField\les_discapacidad : CharField\luser : CharField\ltlf_local : CharField\lestado : ForeignKey\lparroquia : IntegerField\lmunicipio : IntegerField\ledad : IntegerField\ls_apellido : CharField\ltlf_movil : CharField\lcedula : IntegerField\lcertificado : CharField\l|}"];
+}

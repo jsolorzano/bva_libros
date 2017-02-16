@@ -1,0 +1,5 @@
+digraph "classes_Directiva" {
+charset="utf-8"
+rankdir=BT
+"2" [shape="record", label="{Directivos|status : CharField\lcargo : ForeignKey\larea : ForeignKey\ldate_update : DateTimeField\lcoord : CharField\ldate_create : DateTimeField\lmunicipio : IntegerField\lcod_directivo : CharField\lestado : ForeignKey\lcedula : CharField\luser : CharField\l|}"];
+}

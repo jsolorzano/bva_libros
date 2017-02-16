@@ -1,0 +1,7 @@
+digraph "classes_Topologia" {
+charset="utf-8"
+rankdir=BT
+"4" [shape="record", label="{Parroquia|cod_parroquia : IntegerField\ldate_update : DateTimeField\ldate_create : DateTimeField\luser : CharField\lestado : ForeignKey\lparroquia : CharField\lmunicipio : IntegerField\l|}"];
+"6" [shape="record", label="{Estado|date_create : DateTimeField\lcod_estado : IntegerField\ldate_update : DateTimeField\lestado : CharField\luser : CharField\l|}"];
+"8" [shape="record", label="{Municipio|cod_municipio : IntegerField\ldate_update : DateTimeField\ldate_create : DateTimeField\lcircuito : ForeignKey\luser : CharField\lestado : ForeignKey\lmunicipio : CharField\l|}"];
+}

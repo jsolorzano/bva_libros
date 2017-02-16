@@ -1,0 +1,5 @@
+digraph "classes_CargaFamiliar" {
+charset="utf-8"
+rankdir=BT
+"2" [shape="record", label="{CargaFamiliar|parentesco : CharField\lnac : CharField\lapellido : CharField\lagremiado : ForeignKey\ledad : CharField\ldate_update : DateTimeField\lcedula : CharField\ldate_create : DateTimeField\lcod_familiar : CharField\luser : CharField\lnombre : CharField\ltelefono : CharField\ldiscapacidad : CharField\l|}"];
+}

@@ -1,0 +1,5 @@
+digraph "classes_Vehiculo" {
+charset="utf-8"
+rankdir=BT
+"2" [shape="record", label="{Vehiculo|propietario : CharField\lserial_m : CharField\lagremiado : ForeignKey\lserial_c : CharField\ldate_update : DateTimeField\lmarca : CharField\lc_vehiculo : CharField\ldate_create : DateTimeField\lanyo : CharField\lmodelo : CharField\luser : CharField\lcod_vehiculo : CharField\ltraspaso : CharField\lespecifique : CharField\ln_nom : CharField\lplaca : CharField\lcolor : CharField\lcedula : IntegerField\l|}"];
+}

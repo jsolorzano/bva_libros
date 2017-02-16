@@ -1,0 +1,5 @@
+digraph "classes_Partidos" {
+charset="utf-8"
+rankdir=BT
+"2" [shape="record", label="{Partido|status : CharField\ldate_update : DateTimeField\ldate_create : DateTimeField\lcod_partido : CharField\luser : CharField\ldescripcion : CharField\lnombre : CharField\l|}"];
+}

@@ -1,0 +1,21 @@
+digraph "packages_General" {
+charset="utf-8"
+rankdir=BT
+"3" [shape="box", label="directiva.models"];
+"5" [shape="box", label="areas.models"];
+"7" [shape="box", label="linea.models"];
+"9" [shape="box", label="circuitos.models"];
+"11" [shape="box", label="topologia.municipios.models"];
+"13" [shape="box", label="dominio.models"];
+"15" [shape="box", label="topologia.parroquias.models"];
+"17" [shape="box", label="bitacora.models"];
+"19" [shape="box", label="envios.models"];
+"23" [shape="box", label="cargos.models"];
+"25" [shape="box", label="login.models"];
+"27" [shape="box", label="carga_familiar.models"];
+"29" [shape="box", label="vehiculo.models"];
+"31" [shape="box", label="situacion_hab.models"];
+"33" [shape="box", label="topologia.estados.models"];
+"35" [shape="box", label="registro.models"];
+"37" [shape="box", label="partidos.models"];
+}
