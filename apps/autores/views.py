@@ -16,7 +16,7 @@ import csv
 from django.conf import settings
 
 
-# Create your views here.
+# Create your views here. (Crea tus vistas aquí)
 @login_required(login_url='/iniciar/login/')
 def ListarAutores(request):
     """
