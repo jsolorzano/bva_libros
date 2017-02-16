@@ -1,0 +1,62 @@
+{% extends "base/base.html" %} <!-- Heredando (Bloque) plantilla index -->
+    {% block title %}Reporte de línea{% endblock title%}
+    {% if form.non_field_errors %}
+    <div class="panel">
+      {{ form.non_field_errors }}
+    </div>
+  {% endif %}
+  {% block contenido %}
+  <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/select2/select2.css">
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/select2/select2-bootstrap.css">
+	
+<script src="{{STATIC_URL}}js/select2/select2.js"></script>
+<script src="{{STATIC_URL}}js/select2/select2_locale_es.js"></script>
+    <script>
+	  $(document).ready( function () {
+	  	$("select").select2();
+		$("#id_reportes").attr('class','active');
+		
+		$("#reporte_linea").click(function() {
+		  var linea = $("#id_linea").val();
+		  
+		  //alert(linea)
+			 
+		  if (linea != '') {
+			URL = "../reporte_linea/"+linea
+			window.open(URL)
+		  }else{
+            apprise("Seleccione una línea");
+            return false;
+          }
+		
+		});
+		  
+	  } );
+	  		
+	</script>
+	<br><br><br><br>
+    <table style="text-align:center;border-collapse: separate;border-spacing: 5px 15px;">
+	  <tr>
+		<td colspan="2" style='background-color:#B1ACA5;color:white;text-align:center;'>
+		  Reporte de agremiados por línea
+		</td>
+	  </tr>
+	  <tr>
+		<td>Línea:</td>
+		<td>
+		  <select id='id_linea' required style='width:350px;' />
+            <option value=''>----------------</option>
+            {% for l in listar_lineas %}
+            <option value='{{l.id}}'>{{l.linea}}</option>
+            {% endfor %}
+        </select>
+		</td>
+	  </tr>
+	  <tr>
+		<td>
+		  <button id="reporte_linea" class='btn btn-danger'>Generar Reporte</button>
+		</td>
+	  </tr>
+	</table>
+    {% endblock contenido%}
+<!-- ************************************************************* -->

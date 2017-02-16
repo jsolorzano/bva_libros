@@ -1,0 +1,180 @@
+{% extends "base/base.html" %} <!-- Heredando (Bloque) plantilla index -->
+
+{% block title %}Actualizar Vehículos{% endblock title%} <!--Bloque para definir el título-->
+
+
+{% block contenido %} <!-- Apertura de la carga de datos en el bloque 'contenido' de la plantilla 'base' -->
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/select2/select2.css">
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/select2/select2-bootstrap.css">
+    
+<script src="{{STATIC_URL}}js/select2/select2.js"></script>
+<script src="{{STATIC_URL}}js/select2/select2_locale_es.js"></script>
+<script>
+    $(document).ready(function () {
+        $("select").select2();
+	    $("#id_configuracion").attr('class','active');
+	    var ListGroup = $('#id_list_n_p').dataTable({
+                    "iDisplayLength": 5,
+                    "iDisplayStart": 0,
+                    "sPaginationType": "full_numbers",
+                    "aLengthMenu": [5, 10, 20, 30, 40, 50],
+                    "oLanguage": {"sUrl": "/static/js/es.txt"},
+                    "aoColumns": [
+                    {"sClass": "registro center", "sWidth": "2%"},
+                    {"sClass": "registro center", "sWidth": "30%"},
+                    {"sClass": "registro center", "sWidth": "2%"},
+                    ]
+                });	    
+	    
+        $('#id_color,#id_n_nom').alpha({allow: " "});
+        $('#id_c_vehiculo').alphanumeric({allow: "#°, "});
+        $('#id_anyo').numeric({allow: ""}).attr('maxlength', '4');
+		$('#id_cedula_n_p').numeric({allow: ""}).attr('maxlength', '8');
+	
+	$("#id_propietario").change(function() {
+        var propietario = $(this).val();
+            
+            if (propietario == '2') {
+                $('#id_cedula_n_p').prop('disabled', false);
+		$('#id_n_nom').prop('disabled', false);
+            }else{
+                $('#id_cedula_n_p').prop('disabled', true);
+		$('#id_n_nom').prop('disabled', true);
+            }
+        });
+
+    $("#id_traspaso").change(function() {
+        var traspaso = $(this).val();
+            if (traspaso == '2') {
+                $('#id_especifique').prop('disabled', false);
+            }else{
+                $('#id_especifique').prop('disabled', true);
+            }
+        });
+    });
+</script>
+<form method="post">
+    {% csrf_token %}
+    <div class='panel panel-default' style='width:80%'>
+        <div class="panel-heading" style='font-size: 20px;font-weight:bold;'>Actualizar vehículo</div>
+        <br>
+        <table class='table-responsive' style="text-align:center;border-collapse: separate;border-spacing: 5px 15px;width:97%">
+            <tr>
+                <td>
+                    <input id="id_cod_vehiculo" required name="cod_vehiculo" type="hidden" value='{{obj_rvehiculo.cod_vehiculo}}'/>
+                    <input id="id_veh" name="id" type="hidden" value='{{obj_rvehiculo.id}}'/>
+                </td>
+            </tr>
+            <tr>
+                <td>Agremiado:</td>
+                <td colspan='6'>
+                    <select id="id_agremiado" name="agremiado" style='with:150%'>
+                        <option value=""></option>
+                        {% for a in agremiados %}
+                        {% if a.cedula == obj_rvehiculo.agremiado_id %}
+                        <option value='{{a.cedula}}' selected="selected">{{a.cedula}} {{a.p_nombre}} {{a.p_apellido}}</option>
+                        {% endif %}
+                        {% if not a.cedula == obj_rvehiculo.agremiado_id %}
+                        <option value='{{a.cedula}}'>{{a.cedula}} {{a.p_nombre}} {{a.p_apellido}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Placa:</td>
+                <td colspan='2'><input id="id_placa" required name="placa" type="text" value='{{obj_rvehiculo.placa}}'/></td>
+                <td>Serial Carrocería:</td>
+                <td colspan='2'><input id="id_serial_c" required name="serial_c" type="text" value='{{obj_rvehiculo.serial_c}}'/>
+                </td>
+            </tr>
+            <tr>
+                <td>Serial Moto:</td>
+                <td><input id="id_serial_m" required name="serial_m" type="text" value='{{obj_rvehiculo.serial_m}}'/></td>
+                <td style='width:15%'>Marca:</td>
+                <td><input id="id_marca" required name="marca" type="text" value='{{obj_rvehiculo.marca}}'/></td>
+                <td>Modelo:</td>
+                <td><input id="id_modelo" required name="modelo" type="text" value='{{obj_rvehiculo.modelo}}'/>
+                </td>
+            </tr>
+            <tr>
+                <td>Color:</td>
+                <td><input id="id_color" required name="color" type="text" value='{{obj_rvehiculo.color}}'/></td>
+                <td>Año:</td>
+                <td><input id="id_anyo" required name="anyo" type="text" value='{{obj_rvehiculo.anyo}}'/></td>
+                <td>¿Propietario?</td>
+                <td>
+                    <select id='id_propietario' name='propietario' style='width:100%;' required>
+                        <option value="">-----</option>
+                        {% if obj_rvehiculo.propietario == '1'%}
+                        <option value='1' selected=selected>SI</option>
+                        {% endif %}
+                        {% if not obj_rvehiculo.propietario == '1'%}
+                        <option value='1'>SI</option>
+                        {% endif %}
+                        {% if obj_rvehiculo.propietario == '2' %}
+                        <option value='2' selected=selected>NO</option>
+                        {% endif %}
+                        {% if not obj_rvehiculo.propietario == '2' %}
+                        <option value='2'>NO</option>
+                        {% endif %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Traspaso</td>
+                <td>
+                    <select id='id_traspaso' name='traspaso' style='width:100%;' required>
+                        <option value="">-----</option>
+                        {% if obj_rvehiculo.traspaso == '1'%}
+                        <option value='1' selected=selected>SI</option>
+                        {% endif %}
+                        {% if not obj_rvehiculo.traspaso == '1'%}
+                        <option value='1'>SI</option>
+                        {% endif %}
+                        {% if obj_rvehiculo.traspaso == '2' %}
+                        <option value='2' selected=selected>NO</option>
+                        {% endif %}
+                        {% if not obj_rvehiculo.traspaso == '2' %}
+                        <option value='2'>NO</option>
+                        {% endif %}
+                    </select>
+                </td>
+                <td>
+                    Observación
+                </td>
+                <td colspan='3'>
+                    <input id="id_especifique" name="especifique" type="text" value='{{obj_rvehiculo.especifique}}'/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan='6' style='text-align: left'>Condiciones del vehículo</td>
+            </tr>
+            <tr>
+                <td colspan='6'>
+                    <textarea style='width:100%;' id="id_c_vehiculo" maxlength="250" name="c_vehiculo" rows="3" placeholder="Especifique las condiciones del véhiculo">{{obj_rvehiculo.c_vehiculo}}</textarea>
+                </td>
+            </tr>
+	    <tr>
+			<td colspan='2'>Propietario original</td>
+	    </tr>
+	    <tr class="alert alert-dismissible alert-success">
+			<td>Cédula</td>
+			<td><input type='text' id='id_cedula_n_p' name='cedula' placeholder='Cédula' 
+                {% if obj_rvehiculo.cedula%}
+                value='{{obj_rvehiculo.cedula}}'
+                {% endif %}
+                ></td>
+			<td style='width: 150px;'>Nombres y apellidos</td>
+			<td colspan='3'><input type='text' id='id_n_nom' name='n_nom' placeholder='Nombres y apellidos' value='{{obj_rvehiculo.n_nom}}'></td>
+	    </tr>
+	    <tr>
+			<td colspan='6' style='text-align:right;'>
+				    <input type="submit" value="Actualizar"/>
+			</td>
+	    </tr>
+        </table>
+    </div>
+    
+</form>
+{% endblock contenido %} <!-- Cierre de la carga de datos en el bloque 'contenido' de la plantilla 'base' -->

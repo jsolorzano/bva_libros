@@ -1,0 +1,50 @@
+{% extends "base/base.html" %} <!-- Heredando (Bloque) plantilla index -->
+
+{% block title %}Emisión reporte Vehículo{% endblock title%} <!--Bloque para definir el título-->
+
+
+{% block contenido %} <!-- Apertura de la carga de datos en el bloque 'contenido' de la plantilla 'base' -->
+    <script>
+    $(document).ready(function() {
+        $(".e_report").click(function () {
+            var ced = $("#id_agremiado_r").val()
+            
+            if (ced == 0) {
+                alert("Debe seleccionar un agremiado");
+            }else{
+                URL = "../agreportv/"+ced
+                window.open(URL);
+            }
+        });
+    });
+    </script>
+    <form method="post">
+	{% csrf_token %}
+	<table style="text-align:center;border-collapse: separate;border-spacing: 5px 15px;">
+	    <tr>
+		<td colspan="2" style='background-color: #B1ACA5;color:white;text-align:center;'>
+		    Reporte vehículo
+		</td>
+	    </tr>
+            <tr>
+		<td><input id="id_cod_vehiculo" required name="cod_vehiculo" type="hidden" value='{{obj_rvehiculo.cod_vehiculo}}'/>
+		</td>
+	    </tr>
+	    <tr>
+		<td>Agremiado:</td>
+		<td>
+		    <select id="id_agremiado_r" name="agremiado">
+			<option value=0></option>
+			{% for a in list_v %}
+			<option value='{{a.cedula}}'>{{a.cedula}} {{a.p_nombre}} {{a.p_apellido}}</option>
+			{% endfor %}
+		    </select>
+		</td>
+	    </tr>
+	    
+	    <tr>
+		<td><input type="button" value="Emitir" class='btn btn-primary e_report'/></td>
+	    </tr>
+	</table>
+    </form>
+{% endblock contenido %} <!-- Cierre de la carga de datos en el bloque 'contenido' de la plantilla 'base' -->

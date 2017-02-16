@@ -1,0 +1,72 @@
+{% extends "base/base.html" %} <!-- Heredando (Bloque) plantilla index -->
+    {% block title %}Lista de Categorías{% endblock title%}
+    {% if form.non_field_errors %}
+    <div class="panel">
+      {{ form.non_field_errors }}
+    </div>
+  {% endif %}
+  {% block contenido %}
+    <script>
+	    $(document).ready( function () {
+	    $("#id_configuracion").attr('class','active');
+            var TCargo = $('#lista_categorias').dataTable({
+              "iDisplayLength": 5,
+              "iDisplayStart": 0,
+              "sPaginationType": "full_numbers",
+              "aLengthMenu": [5, 10, 20, 30, 40, 50],
+              "oLanguage": {"sUrl": "/static/js/es.txt"},
+              "aoColumns": [
+                  {"sClass": "registro center", "sWidth": "1%"},
+                  {"sClass": "registro center", "sWidth": "8%"},
+                  {"sWidth": "3%", "bSortable": false, "sClass": "center sorting_false", "bSearchable": false}
+              ]
+            });
+        } );
+	</script>
+        {% load templatag_grupos %}
+	<div class='panel panel-default' style='width:90%'>
+	<div class="panel-heading" style='font-size: 20px;font-weight:bold;'>Listado de Categorías</div>
+    <br>
+    <div style='width: 60em;'>
+    <table class='table table-striped table-hover' id='lista_categorias'>
+      <thead>
+      <tr>
+        <th colspan=3>
+          {% ifusergroup administrador %}
+          <a href='/categorias/data'>
+            <button class='btn btn-default'>Importar Categorías</button>
+          </a>
+          {% endifusergroup %}
+           <a href="/categorias/registrar_categoria" title='Nuevo'>  
+            <button class='btn btn-default'>Registrar Categoría</button>
+          </a>
+        </th>
+      </tr>
+      <tr style='background-color: #E86639; color:white;'>
+        <th style='text-align: left;'><b>Código</b></th>
+        <th style='text-align: left;'><b>Categoría</b></th>
+        <th style='text-align: right;'>Acción</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for ct in listar_categorias %}
+      <tr>
+        <td style="text-align: left !important;">{{ ct.cod_categoria }}</td>
+        <td style="text-align: left !important;">{{ ct.categoria }}</td>
+        <td style="text-align: right !important;">
+          <a href='{% url "actualizar_categoria" ct.id %}'>
+            <img src='/static/image/editar.png' title='Editar' style="width:30px;height:30px;">
+          </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <a onclick="eliminar_data('{{ct.id}}', '/categorias/eliminar_categoria/')">
+            <img src='/static/image/eliminar.png' title='Eliminar'>
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    <br>
+    </div>
+    {% endblock contenido%}
+<!-- ************************************************************* -->

@@ -1,0 +1,218 @@
+{% extends "base/base.html" %} <!-- Heredando (Bloque) plantilla index -->
+{% block title %}Lista de Libros{% endblock title%}
+{% if form.non_field_errors %}
+<div class="panel">
+    {{ form.non_field_errors }}
+</div>
+{% endif %}
+{% block contenido %}
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/select2/select2.css">
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/select2/select2-bootstrap.css">
+	
+<script src="{{STATIC_URL}}js/select2/select2.js"></script>
+<script src="{{STATIC_URL}}js/select2/select2_locale_es.js"></script>
+<script>
+    $(document).ready(function () {
+		
+		$("select").select2();
+		
+		$("#id_configuracion").attr('class', 'active');
+		
+		var TLibro = $('#lista_libros').dataTable({
+			"iDisplayLength": 20,
+			"iDisplayStart": 0,
+			"sPaginationType": "full_numbers",
+			"aLengthMenu": [5, 10, 20, 30, 40, 50],
+			"oLanguage": {"sUrl": "/static/js/es.txt"},
+			"aoColumns": [
+			{"sClass": "registro center", "sWidth": "2%"},
+			{"sClass": "registro center", "sWidth": "8%"},
+			{"sClass": "registro center", "sWidth": "8%"},
+			{"sClass": "registro center", "sWidth": "14%"},
+			{"sClass": "none", "sWidth": "8%"},
+			{"sClass": "none", "sWidth": "8%"},
+			{"sClass": "none", "sWidth": "8%"},
+			{"sWidth": "5%", "bSortable": false, "sClass": "center sorting_false", "bSearchable": false}
+			]
+		});
+		
+		$('#filtrar').click(function(){
+			//~ url = '/libros/listar_libros_filtro/'
+			if ($("#sede").val() == '0' && $("#categoria").val() == '0' && $("#autor").val() == '0' && $("#editorial").val() == '0'){
+				bootbox.alert("Seleccione algún parámetro para filtrar", function () {
+				
+				});
+			}else{
+				url = '/libros/listar_libros_filtro/'+$("#sede").val()+'/'+$("#categoria").val()+'/'+$("#autor").val()+'/'+$("#editorial").val()
+				window.location = url
+			}
+			
+		})
+		
+    });
+</script>
+<style>
+    table#lista_lineas thead tr th{
+        text-align: center;
+    }
+    td.detalles:hover{
+        color:blue;
+        background-color: #CCCCCC;
+        text-align: left;
+    }
+</style>
+{% load templatag_grupos %}
+<div class='panel panel-default'>
+    <div class="panel-heading" style='font-size: 20px;font-weight:bold;'>Listado de Libros</div>
+    <br>
+    <div style='width: 70em;'>
+		
+		<form id="form_bots">
+			<div class="col-md-3">
+				<div class="form-group">
+					<label style="font-weight:bold">Sede</label>
+					<select id="sede" name="sede" class="form-control" >
+						<option value="0">Seleccione</option>
+						{% for se in sedes %}
+						<option value='{{se.cod_sede}}'>{{se.sede}}</option>
+						{% endfor %}
+					</select>
+				</div><!-- /.form-group -->
+			</div><!-- /.form-group --> 
+			<div class="col-md-2">
+				<div class="form-group">
+					<label style="font-weight:bold">Categoría</label>
+					<select id="categoria" name="categoria" class="form-control" >
+						<option value="0">Seleccione</option>
+						{% for cat in categorias %}
+						<option value='{{cat.cod_categoria}}'>{{cat.categoria}}</option>
+						{% endfor %}
+					</select>
+				</div><!-- /.form-group -->
+			</div><!-- /.form-group --> 
+			<div class="col-md-2">
+				<div class="form-group">
+					<label style="font-weight:bold">Autor</label>
+					<select id="autor" name="autor" class="form-control" >
+						<option value="0">Seleccione</option>
+						{% for au in autores %}
+						<option value='{{au.cod_autor}}'>{{au.autor}}</option>
+						{% endfor %}
+					</select>
+				</div><!-- /.form-group -->
+			</div><!-- /.form-group --> 
+			<div class="col-md-2">
+				<div class="form-group">
+					<label style="font-weight:bold">Editorial</label>
+					<select id="editorial" name="editorial" class="form-control" >
+						<option value="0">Seleccione</option>
+						{% for ed in editoriales %}
+						<option value='{{ed.cod_editorial}}'>{{ed.editorial}}</option>
+						{% endfor %}
+					</select>
+				</div><!-- /.form-group -->
+			</div><!-- /.form-group --> 
+			<div class="col-md-2">
+				<div class="form-group">
+					<label style="font-weight:bold"></label>
+					<br/><br/>
+					<button type="button" role="button" class="btn btn-primary" style="font-weight: bold;font-size: 13px; color: white" id="filtrar">
+						&nbsp;<span class="glyphicon glyphicon-list"></span>&nbsp;Filtrar
+					</button>
+				</div><!-- /.form-group -->
+			</div><!-- /.form-group -->
+		</form>
+		
+		<br/><br/><br/><br/><br/>
+		
+        <table class="table table-bordered table-striped table-hover table-condensed dt-responsive table-responsive" id='lista_libros'>
+            <thead>
+                {% if user.is_authenticated %}
+                <tr>
+                    <th>
+                        <a href="/libros/registrar_libro" title='Nuevo'>  
+                            <button class='btn btn-default'>Registrar Libro</button>
+                        </a>
+                    </th>
+                </tr>
+                {% endif %}
+                <tr style='background-color: #E86639; color:white; text-align: center;'>
+                    <th>Código</th>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Fecha de publicación</th>
+                    <th>Editorial</th>
+                    <th>Categoría</th>
+                    <th>Sede</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+<!--
+            <tfoot>
+				<tr>
+					<th>Código</th>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Fecha de publicación</th>
+                    <th>Editorial</th>
+                    <th>Categoría</th>
+                    <th>Sede</th>
+                    <th>Acción</th>
+				</tr>
+			</tfoot>
+-->
+            <tbody>
+                {% for l in listar_libros %}
+                <tr>
+                    <td title="Ver detalles" class="detalles">{{ l.cod_libro }}</td>
+                    <td style="text-align: left;">{{ l.titulo }}</td>
+                    <td style="text-align: left;">
+						{% for au in autores %}
+                        {% if au.cod_autor == l.autor_id %}
+                        {{ au.autor }}
+                        {% endif %}
+                        {% endfor %}
+					</td>
+                    <td>{{ l.fecha_pub |date:"SHORT_DATE_FORMAT"}}</td>
+                    <td style="text-align: left;">
+						{% for ed in editoriales %}
+                        {% if ed.cod_editorial == l.editorial_id %}
+                        {{ ed.editorial }}
+                        {% endif %}
+                        {% endfor %}
+					</td>
+                    <td>
+                        {% for c in categorias %}
+                        {% if c.cod_categoria == l.categoria_id %}
+                        {{ c.categoria }}
+                        {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for s in sedes %}
+                        {% if s.cod_sede == l.sede_id %}
+                        {{ s.sede }}
+                        {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% if user.is_authenticated %}
+                        <a href='{% url "actualizar_libro" l.id %}'>
+                            <img src='/static/image/editar.png' title='Editar' style="width:30px;height:30px;">
+                        </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a onclick="eliminar_data('{{l.id}}', '/linea/eliminar_libro/')">
+                            <img src='/static/image/eliminar.png' title='Eliminar'>
+                        </a>
+                        {% else %}
+                        <img src='/static/image/block.png' title='Restringido' style="width:25px; height:25px;">
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <br>
+</div>
+{% endblock contenido%}
+<!-- ************************************************************* -->

@@ -1,0 +1,35 @@
+{% extends "base/base.html" %} <!-- Bloque, Plantilla base -->
+    {% block title %}Actualizar Estado{% endblock %}
+    
+    {% block contenido %}
+    <script>
+		$(document).ready(function() {
+			$("#id_configuracion").attr('class','active');
+			$('#id_cod_estado').numeric({allow: ""});
+			$('#id_estado').alpha({allow: " "});
+		});
+    </script>
+	<form method="post">
+	    {% csrf_token %}
+	    <div class='panel panel-default' style='width:60%'>
+		    <div class="panel-heading" style='font-size: 20px;font-weight:bold;'>Actualizar estado</div>
+		    <br>
+	    <table style="text-align:center;border-collapse: separate;border-spacing: 5px 15px;">
+	    	<tr>
+	    		<td>Cod estado</td>
+	    		<td><input type='text' required id="id_cod_estado" name="cod_estado" value='{{obj_regestado.cod_estado}}'/></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Estado</td>
+	    		<td><input id="id_estado" required maxlength="50" name="estado" type="text" value='{{obj_regestado.estado}}' pattern="[a-zA-Z]*"/>
+	    		</td>
+	    	</tr>
+	    	<tr>
+	    		<td colspan='3' style='text-align:right;'>
+	    			<input type="submit" value="Actualizar"/>
+	    		</td>
+	    	</tr>
+	    </table>
+	</div>
+    </form>
+    {% endblock contenido%}

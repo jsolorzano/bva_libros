@@ -1,0 +1,92 @@
+{% extends "base/base.html" %} <!-- Heredando (Bloque) plantilla index -->
+    {% block title %}Lista de Vehículos{% endblock title%}
+    {% if form.non_field_errors %}
+    <div class="panel">
+      {{ form.non_field_errors }}
+    </div>
+  {% endif %}
+  {% block contenido %}
+	<script>
+      $(document).ready( function () {
+          $("#id_configuracion").attr('class','active');
+          var TVeh = $('#lista_vehiculos').dataTable({
+              "iDisplayLength": 5,
+              "iDisplayStart": 0,
+              "sPaginationType": "full_numbers",
+              "aLengthMenu": [5, 10, 20, 30, 40, 50],
+              "oLanguage": {"sUrl": "/static/js/es.txt"},
+              "aoColumns": [
+                  {"sClass": "registro center", "sWidth": "4%"},
+                  {"sClass": "registro center", "sWidth": "50%"},
+                  {"sClass": "registro center", "sWidth": "15%"},
+                  {"sClass": "registro center", "sWidth": "20%"},
+                  {"sClass": "registro center", "sWidth": "30%"},
+                  {"sClass": "registro center", "sWidth": "8%"},
+                  {"sClass": "registro center", "sWidth": "8%"},
+                  {"sClass": "registro center", "sWidth": "8%"},
+		  {"sClass": "registro center", "sWidth": "8%"},
+                  {"sWidth": "3%", "bSortable": false, "sClass": "center sorting_false", "bSearchable": false}
+              ]
+          });         
+      } );
+	</script>
+    <style>
+      table#lista_vehiculos thead tr th{
+	text-align: center;
+      }
+    </style>
+    <div class='panel panel-default' style='width:100%'>
+		<div class="panel-heading" style='font-size: 20px;font-weight:bold;'>Listado de Vehículos</div>
+		<br>
+    <div style='width: 70em;'>
+    <table class='table table-striped table-hover' id='lista_vehiculos' >
+      <thead>
+	<tr>
+	  <td colspan='2'>
+	    <a href="/vehiculo/registrar_vehiculo" title='Nuevo'>  
+	      <button class='btn btn-default'>Registrar Vehículo</button>
+	    </a>
+	  </td>
+	</tr>
+	<tr style='background-color: #E86639; color:white;'>
+	  <th>Cédula</th>
+	  <th>Nombre completo</th>
+	  <th>Placa</th>
+	  <th>Serial Carrocería</th>
+	  <th>Serial Motor</th>
+	  <th>Marca</th>
+	  <th>Modelo</th>
+	  <th>Color</th>
+	  <th>Año</th>
+	  <th>Acción</th>
+	</tr>
+      </thead>
+      <tbody>
+        {% for v in listar_vehiculos %}
+          <tr>
+            <td>{{ v.agremiado.cedula }}</td>
+	    <td>{{ v.agremiado.p_nombre }} {{ v.agremiado.s_nombre }} {{ v.agremiado.p_apellido }} {{ v.agremiado.s_apellido }}</td>
+            <td>{{ v.placa }}</td>
+            <td>{{ v.serial_c }}</td>
+            <td>{{ v.serial_m }}</td>
+            <td>{{ v.marca }}</td>
+            <td>{{ v.modelo }}</td>
+            <td>{{ v.color }}</td>
+            <td>{{ v.anyo }}</td>
+            <td>
+             <a href='{% url "actualizar_vehiculo" v.id %}'>
+                <img src='../../static/admin/img/icon_changelink.gif' title='Editar'>
+              </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <a onclick="eliminar_data('{{v.id}}', '/vehiculo/eliminar_vehiculo/')">
+                <img src='../../static/admin/img/icon_deletelink.gif' title='Eliminar'>
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    <br>
+    </div>
+    {% endblock contenido%}
+<!-- ************************************************************* -->

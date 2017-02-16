@@ -1,0 +1,74 @@
+{% extends "base/base.html" %} <!-- Bloque, Plantilla base -->
+    {% block title %}Actualizar Parroquias{% endblock %}
+    
+    {% block contenido %}
+    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/select2/select2.css">
+    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/select2/select2-bootstrap.css">
+	
+    <script src="{{STATIC_URL}}js/select2/select2.js"></script>
+    <script src="{{STATIC_URL}}js/select2/select2_locale_es.js"></script>
+    <script>
+		$(document).ready(function() {
+			$("select").select2();
+			$("#id_configuracion").attr('class','active');
+			$('#id_cod_parroquia').numeric({allow: ""});
+			$('#id_parroquia').alpha({allow: " "});
+		});
+    </script>
+	<form method="post">
+	    {% csrf_token %}
+	    <div class='panel panel-default' style='width:60%'>
+		    <div class="panel-heading" style='font-size: 20px;font-weight:bold;'>Actualizar Parrroquia</div>
+		    <br>
+	    <table style="text-align:center;border-collapse: separate;border-spacing: 5px 15px;">
+	    	<tr>
+		    <td>Código</td>
+		    <td><input id="id_cod_parroquia" required=True name="cod_parroquia" type="text" value='{{obj_reg_parr.cod_parroquia}}' required=True/></td>
+	    	</tr>
+	    	<tr>
+		    <td>Estado</td>
+		    <td>
+			<select id="id_cod_estado" name="estado" required=True>
+			    <option value="">-----------------------------</option>
+			    {% for e in list_e %}
+				{% if e.cod_estado == obj_reg_parr.estado_id%}
+				    <option value='{{e.cod_estado}}' selected='selected'>{{ e.estado }}</option>
+				{% endif %}
+				{% if not e.cod_estado == obj_reg_parr.estado_id %}
+				    <option value='{{e.cod_estado}}'>{{ e.estado }}</option>
+				{% endif %}
+			    {% endfor %}
+			</select>
+		    </td>
+	    	</tr>
+	    	<tr>
+		    <td>Municipio</td>
+		    <td>
+			<select id="id_cod_municipio" name="municipio" required=True>
+			    <option value="">-----------------------------</option>
+			    {% for est in list_e%}
+				    {% for m in list_m %}
+						{% if est.cod_estado == obj_reg_parr.estado_id and m.cod_municipio == obj_reg_parr.municipio%}
+						<option value='{{m.cod_municipio}}' selected='selected'>{{m.municipio}}</option>
+					    {% endif %}
+					    {% if not m.cod_municipio == obj_reg_parr.municipio %}
+						<option value='{{m.cod_municipio}}'>{{m.municipio}}</option>
+					    {% endif %}
+				    {% endfor %}
+			    {%endfor%}
+			</select>
+		    </td>
+		    </tr>
+		    <tr>
+			<td>Parroquia</td>
+			<td><input id="id_parroquia" maxlength="50" name="parroquia" type="text" value='{{obj_reg_parr.parroquia}}' required=True/></td>
+		    </tr>
+	    	<tr>
+	    	    <td colspan='3' style='text-align:right;'>
+			<input type="submit" value="Actualizar"/>
+		    </td>	
+	    	</tr>
+	    </table>
+	</div>
+	</form>
+    {% endblock contenido%}

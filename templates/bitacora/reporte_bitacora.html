@@ -1,0 +1,150 @@
+{% extends "base/base.html" %} <!-- Heredando (Bloque) plantilla index -->
+    {% block title %}Reporte de bitacora{% endblock title%}
+    {% if form.non_field_errors %}
+    <div class="panel">
+      {{ form.non_field_errors }}
+    </div>
+  {% endif %}
+  {% block contenido %}
+    <script>
+	  $(document).ready( function () {
+		$("#id_reportes").attr('class','active');
+		// Aplicación de bootstrap-datepicker
+		var startDate = new Date('01/01/2015');
+        var FromEndDate = new Date();
+        var ToEndDate = new Date();
+        
+        ToEndDate.setDate(ToEndDate.getDate()+365);
+        
+        $('#id_desde').datepicker({
+		  format: "dd-mm-yyyy",
+		  endDate: FromEndDate,
+		  language: "es",
+		  //startView: 1,
+		  autoclose: true,
+		  //startDate: "-1y"
+        })
+		.on('changeDate', function(selected){
+		  startDate = new Date(selected.date.valueOf());
+		  startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
+		  $('#to_date').datepicker('setStartDate', startDate);
+		});
+        $('#id_hasta').datepicker({
+		  format: "dd-mm-yyyy",
+		  startDate: startDate,
+		  endDate: ToEndDate,
+		  autoclose: true,
+		  language: "es"
+		})
+		.on('changeDate', function(selected){
+		  FromEndDate = new Date(selected.date.valueOf());
+		  FromEndDate.setDate(FromEndDate.getDate(new Date(selected.date.valueOf())));
+		  $('#from_date').datepicker('setEndDate', FromEndDate);
+		});
+		
+		
+		//Validación del campo checkbox 'id_todo' al cargar la página
+		if ($("#id_todo").is(':checked')) {
+		  $("#id_desde").val('')
+		  $("#id_hasta").val('')
+		  $("#linea_desde").hide("slow");
+		  $("#linea_hasta").hide("slow");
+		}else{
+		  $("#linea_desde").show("slow");
+		  $("#linea_hasta").show("slow");
+		}
+		//Validación del campo checkbox 'id_todo' al hacer click sobre él
+		$("#id_todo").click(function() {
+		  if ($("#id_todo").is(':checked')) {
+			$("#id_desde").val('')
+			$("#id_hasta").val('')
+			$("#linea_desde").hide("slow");
+			$("#linea_hasta").hide("slow");
+		  }else{
+			$("#linea_desde").show("slow");
+			$("#linea_hasta").show("slow");
+		  }
+		});
+		
+		// Validación de los campos y envio de los datos  
+		$("#reporte_bit_usu").click(function() {
+		  var usu = $("#id_usu").val();
+		  var todo = $("#id_todo")
+		  var f_desde = $("#id_desde").val();
+		  var f_hasta = $("#id_hasta").val();
+		  
+		  //alert(usu)
+		  if (todo.is(':checked')){
+			if (usu != '') {
+			  URL = "../reporte_bitacora_gen/"+usu
+			  //alert(URL)
+			  window.open(URL)
+			}else{
+			  alert("Seleccione un usuario")
+			}
+		  }else{
+			if (usu != '' && f_desde != '' && f_hasta != '') {
+			  URL = "../reporte_bitacora_esp/"+usu+"/"+f_desde+"/"+f_hasta
+			  //alert(URL)
+			  window.open(URL)
+			}else{
+			  if (usu == '') {
+				alert("Seleccione un usuario")
+			  }else if (f_desde == '') {
+				alert("Indique una fecha inicial")
+			  }else if (f_hasta == '') {
+				alert("Indique una fecha final")
+			  }
+			}
+		  }
+		
+		});
+		  
+	  } );
+	  		
+	</script>
+	<br><br><br><br>
+	{% if sms %}
+	  {{sms}}
+	{% endif %}
+    <table style="text-align:center;border-collapse: separate;border-spacing: 5px 15px;width: 400px">
+	  <tr>
+		<td colspan="2" style='background-color:#B1ACA5;color:white;text-align:center;'>
+		  Reporte de bitacora por usuario
+		</td>
+	  </tr>
+	  <tr>
+		<td>Usuario:</td>
+		<td>
+		  <select id="id_usu" required>
+			<option value=''>------------------</option>
+			{% for u in usuarios %}
+			<option value='{{u.username}}'>{{u.username}}</option>
+			{% endfor %}
+		  </select>
+		</td>
+	  </tr>
+	  <tr>
+		<td>Todo:</td>
+		<td><input id="id_todo" type="checkbox"></td>
+	  </tr>
+	  <tr id="linea_desde">
+		<td>Desde:</td>
+		<td>
+		  <input id="id_desde" placeholder="Seleccione Fecha Inicial" contenteditable="false" type="text"/>
+		</td>
+	  </tr>
+	  <tr id="linea_hasta">
+		<td>Hasta:</td>
+		<td>
+		  <input id="id_hasta" placeholder="Seleccione Fecha Final" contenteditable="false" type="text"/>
+		</td>
+	  </tr>
+	  <tr>
+		<td>
+		  <button id="reporte_bit_usu">Generar Reporte</button>
+		</td>
+	  </tr>
+	</table>
+    {% endblock contenido%}
+<!-- ************************************************************* -->

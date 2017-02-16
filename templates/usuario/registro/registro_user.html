@@ -1,0 +1,53 @@
+{% extends "base/base.html" %} <!-- Bloque, Plantilla base -->
+{% block title %}Registrar usuario{% endblock %}
+    
+{% block contenido %}
+   
+      <script>
+	$(document).ready(function() {
+	  $("#id_configuracion").attr('class','active');
+	});
+      </script>
+    
+	<form method="post">
+	   {% csrf_token %}
+	   <div class='panel panel-default' style='width:45%'>
+		    <div class="panel-heading" style='font-size: 20px;font-weight:bold;'>Registro usuario</div>
+	   <table style='border-collapse: separate;border-spacing:  5px 15px;'>
+	       <tr>
+	           <td>Usuario</td>
+	           <td><input id="id_username" required maxlength="30" name="username" type="text"/></td>
+	       </tr>
+	       <tr>
+	           <td>Contraseña</td>
+	           <td><input id="id_password1" required name="password1" type="password"/></td>
+	       </tr>
+	       <tr>
+	           <td>Confirmar contraseña</td>
+	           <td><input id="id_password2" required name="password2" type="password"/></td>
+	       </tr>
+	       <tr hidden=True>
+		  <td>Teléfono</td>
+		  <td>
+		  <!--<input type='text' id='tlf' name='tlf'>-->
+		  <input type='hidden' id='user_accion' name='user_accion' readonly value='{{user}}'>
+		  </td>
+	       </tr>
+	       <tr>
+	        <td colspan='3' style='text-align:right;'>
+		  <input type="submit" value="Registrar">
+		</td>
+	       </tr>
+	   </table>
+	    <div style="color:#424242;text-align:left;width: 100%" class="list-group-item list-group-item-success">
+	      <li>
+		  Obligatorio. Longitud máxima de 30 caracteres. Sólo puede estar formado por letras, números y los caracteres @/./+/-/_.
+	      </li>
+	      
+	      <li>
+		  Para verificación, introduzca la misma contraseña que introdujo arriba.
+	      </li>
+	    </div>
+	   </div>
+    </form>
+    {% endblock contenido%}

@@ -1,0 +1,348 @@
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <title>{% block title %}Sistema de Registro Bibliotecario BVA{% endblock title%}</title>
+
+        <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/dataTables.responsive.css">
+        <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/dataTables.bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/fancybox/jquery.fancybox.css">
+        <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/apprise.css">
+
+        <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/style.css">
+        <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/menu_fumtea.css">
+        <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap-datepicker.css">
+        <script src="{{STATIC_URL}}js/jquery-1.11.2.min.js"></script>
+        <script src="{{STATIC_URL}}js/fancybox/jquery.fancybox.js"></script>
+        <script src="{{STATIC_URL}}js/bootbox.js"></script>
+        <script src="{{STATIC_URL}}js/apprise.js"></script>
+
+
+        <script src="{{STATIC_URL}}js/json_response.js"></script>
+        <script src="{{STATIC_URL}}js/alphanumeric.js"></script>
+        <script src="{{STATIC_URL}}js/validaciones.js"></script>
+        <script src="{{STATIC_URL}}js/script.js"></script>
+
+        <script src="{{STATIC_URL}}js/jquery.dataTables.js"></script>
+        <script src="{{STATIC_URL}}js/bootstrap.min.js"></script>
+        <script src="{{STATIC_URL}}js/dataTables.responsive.min.js"></script>
+        <script src="{{STATIC_URL}}js/bootstrap-datepicker.js"></script>
+        <script src="{{STATIC_URL}}js/bootstrap-datepicker.es.min.js"></script>
+        <script src="{{STATIC_URL}}js/dataTables.bootstrap.js"></script>
+        <script src="{{STATIC_URL}}js/footerfijo.js"></script>
+        <script type="text/javascript">
+$(document).ready(function () {
+
+    var $id = $("#id_fis").val();
+
+    var $status = $("#is_staff").val();
+    //alert($status);
+    if ($id != "" && $status == "False") {
+
+        $.fancybox({
+            'autoScale': true,
+            'href': '#search_password_f',
+            'type': 'inline',
+            'hideOnContentClick': true,
+            'transitionIn': 'fade',
+            'transitionOut': 'fade',
+            'openSpeed': 1000,
+            'closeSpeed': 1000,
+            'maxWidth': 1000,
+            'maxHeight': 700,
+            //'width': '960%',
+            //'height': '70%',
+            'helpers': {overlay: {closeClick: false}},
+            'beforeShow': function () {
+                $.fancybox.showLoading();
+            },
+            'afterShow': function () {
+                $.fancybox.hideLoading();
+            },
+            'beforeClose': function () {
+                $('div').removeClass('has-error');
+            }
+
+        });
+
+    }
+
+
+    $(".actualizar_passwd_new").click(function () {
+
+        $.fancybox({
+            'autoScale': true,
+            'href': '#search_password_f',
+            'type': 'inline',
+            'hideOnContentClick': true,
+            'transitionIn': 'fade',
+            'transitionOut': 'fade',
+            'openSpeed': 1000,
+            'closeSpeed': 1000,
+            'maxWidth': 960,
+            'maxHeight': 600,
+            'width': '960%',
+            'height': '70%',
+            'helpers': {overlay: {closeClick: false}},
+            'beforeShow': function () {
+                $.fancybox.showLoading();
+            },
+            'afterShow': function () {
+                $.fancybox.hideLoading();
+            },
+            'beforeClose': function () {
+                $('div').removeClass('has-error');
+            }
+        });
+    });
+
+
+    $(".actualizar_passwd").click(function () {
+        var $id = $("#id_fis");
+        var $password = $("#password_f");
+        var $password_new = $("#password_new");
+        var $password_new_r = $("#password_new_r");
+        if ($password.val() == "") {
+
+            bootbox.alert("Debe ingresar su contraseña anterior", function () {
+            }).on('hidden.bs.modal', function (event) {
+                $("#password_f").parent('div').addClass('has-error')
+                $('#password_f').val('')
+                $("#password_f").focus();
+            });
+
+        } else if ($password_new.val() == "") {
+
+            bootbox.alert("Debe ingresar su contraseña nueva", function () {
+            }).on('hidden.bs.modal', function (event) {
+                $("#password_new").parent('div').addClass('has-error')
+                $('#password_new').val()
+                $("#password_new").focus();
+            });
+
+        } else if ($password_new_r.val() == "") {
+
+            bootbox.alert("Repita su contraseña nueva", function () {
+            }).on('hidden.bs.modal', function (event) {
+                $("#password_new_r").parent('div').addClass('has-error')
+                $('#password_new_r').val()
+                $("#password_new_r").focus();
+            });
+
+        } else if ($password_new.val() != $password_new_r.val()) {
+
+            bootbox.alert("Disculpe, las contraseñas no coinciden", function () {
+            }).on('hidden.bs.modal', function (event) {
+                $("#password_new").parent('div').addClass('has-error')
+                $('#password_new').val()
+                $("#password_new").focus();
+            });
+
+        } else {
+            var data_send = $('#search_password_f').serialize().trim() + '&' + $.param({accion: 'buscar', 'csrfmiddlewaretoken': "{{ csrf_token }}"});
+            //alert("DATA: "+data_send);
+            $.post("/usuarios/nuevo_usuario/", data_send, function (response) {
+                if (response == 'no_existe') {
+
+                    bootbox.alert("Disculpe, la contraseña anterior no es correcta", function () {
+                    }).on('hidden.bs.modal', function (event) {
+                        $("#password_f").parent('div').addClass('has-error')
+                        $('#password_f').val('')
+                        $("#password_f").focus();
+                    });
+
+                } else {
+
+                    bootbox.alert("Cambio de contraseña exitoso", function () {
+                    }).on('hidden.bs.modal', function (event) {
+                        window.location = '/'
+                    });
+
+                }
+            });
+        }
+    });
+
+});
+        </script>
+        <style>
+            #footer{
+                height: 55px;
+                background-color: #FFFFFF;
+                position: fixed;
+                bottom: 0px;
+                width:100% !important;	      
+            }
+            .fancybox-overlay-fixed {
+                z-index: 1000
+            }
+        </style>
+    </head>
+    <body>
+        {% load templatag_grupos %}
+        <!--Cabecera principal-->
+        {% if not user.is_authenticated %}
+        <center>
+        <div class="table-responsive">
+            <img src="{{STATIC_URL}}image/TOPE-SBBVA.jpg" style='width: 97.5%;height: 145px;'>
+        </div>
+        </center>
+        {% endif %}
+        <!-- Inicio menu-->
+
+        <div class="container" style='width:100%;'>
+            <!-- Static navbar -->
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
+
+                    <div id="navbar" class="navbar-collapse collapse">
+                        {% if user.is_authenticated %}
+                        <ul class="nav navbar-nav" style="float:left">
+
+                            <li id='id_inicio'>
+
+                                <a href='/'><span class="glyphicon glyphicon-home"></span>&nbsp;&nbsp;Inicio</a>
+                            </li>
+                            
+                            {% ifusergroup administrador %}
+                            <li class="dropdown" id='id_configuracion'>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Configuración <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="/categorias/listar_categorias" title='Listar categorias'><span>Categorías</span></a></li>
+                                    <li><a href="/autores/listar_autores" title='Listar autores'><span>Autores</span></a></li>
+                                    <li><a href="/editoriales/listar_editoriales" title='Listar editoriales'><span>Editoriales</span></a></li>
+                                    <li><a href="/ejes/listar_ejes" title='Listar Ejes'><span>Ejes</span></a></li>
+                                    <li><a href="/sedes/listar_sedes" title='Listar Sedes'><span>Sedes</span></a></li>
+                                    <li><a href="/usuarios/nuevo_usuario" title='Módulo de usuarios'><span>Usuarios</span></a></li>
+                                    <li><a href="/bitacora/listar_bitacora" title='Listar bitacora'><span>Bitacora</span></a></li>
+                                    <!--<li><a href="/dominio/lista_dominio" title='Listar dominios'><span>Dominios</span></a></li>-->
+                                </ul>
+                            </li>
+                            {% endifusergroup %}
+                            
+                            {% ifusergroup sala %}
+                            <li class="dropdown" id='id_configuracion'>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Configuración <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="/categorias/listar_categorias" title='Listar categorias'><span>Categorías</span></a></li>
+                                    <li><a href="/autores/listar_autores" title='Listar autores'><span>Autores</span></a></li>
+                                    <li><a href="/editoriales/listar_editoriales" title='Listar editoriales'><span>Editoriales</span></a></li>
+                                    <li><a href="/ejes/listar_ejes" title='Listar Ejes'><span>Ejes</span></a></li>
+                                    <li><a href="/sedes/listar_sedes" title='Listar Sedes'><span>Sedes</span></a></li>
+                                    <!--<li><a href="/usuarios/nuevo_usuario" title='Módulo de usuarios'><span>Usuarios</span></a></li>
+                                    <li><a href="/bitacora/listar_bitacora" title='Listar bitacora'><span>Bitacora</span></a></li>-->
+                                    <!--<li><a href="/dominio/lista_dominio" title='Listar dominios'><span>Dominios</span></a></li>-->
+                                </ul>
+                            </li>
+                            {% if user.is_staff == True %}
+                            <li>
+                                <a style='cursor:pointer;' class='actualizar_passwd_new' title='Cambiar contraseña de {{user.first_name}} {{user.last_name}}'>Cambiar contraseña</a>
+                            </li>
+                            {% endif %}
+                            {% endifusergroup %}
+                        </ul>
+                        {% endif %}
+
+                        {% if user.is_authenticated %}
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="/iniciar/logout"><span class='glyphicon glyphicon-log-out'></span>&nbsp;&nbsp;&nbsp;Cerrar sesión:  {{ user }}</a></li>
+                        </ul>
+                        {% endif %}
+                        {% if user.is_authenticated %}
+                        <!--Apertura de Proceso para realizar el cambio de la contraseña a todos los usuarios-->
+
+
+                        <form class="navbar-form navbar-left" role="search" id='search_password_f' style='display: none;'>
+                            <div class="panel-body">
+                                <div class="form-inline">
+                                    <div class="form-group col-xs-12">
+                                        <fieldset>
+                                            <legend>
+                                                Cambio de contraseña
+                                            </legend>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <br/>
+                                <br/>
+                                <div class="form-inline">
+                                    <div class="form-group col-xs-12">
+                                        <label>Contraseña anterior&nbsp;&nbsp;&nbsp;</label>
+                                        <input type="password" id='password_f' name='password_f' class="form-control" placeholder="Contraseña anterior" autofocus='autofocus' style='width: 50%'>
+                                    </div>
+                                </div>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <div class="form-inline">
+                                    <div class="form-group col-xs-12">
+                                        <label>Contraseña nueva&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                        <input type="password" id='password_new' name='password' class="form-control" placeholder="Contraseña nueva" style='width: 50%'/>
+                                    </div>
+                                </div>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <div class="form-inline">
+                                    <div class="form-group col-xs-12">
+                                        <label>Repetir contraseña&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                        <input type="password" id='password_new_r' class="form-control" placeholder="Repita su contraseña" style='width: 50%'/>
+                                    </div>
+                                </div>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <div class='div_button' style='margin-left: 30%'>
+                                    <div class="form-inline">
+                                        <div class="form-group col-xs-12">
+                                            <input type='hidden' id='id_fis' name='id_fis' value='{{user.username}}'/>
+                                            <input type='hidden' id='is_staff' value='{{user.is_staff}}'/>
+                                            <button type="button" class="btn btn-primary actualizar_passwd titulo_pass">Cambiar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <!--Cierre de Proceso para realizar el cambio de la contraseña a todos los usuarios-->
+                        {% endif %}
+                        {% if not user.is_authenticated %}
+                        <ul class="nav navbar-nav navbar-right">
+                            <li id='inicio_login'><a href="/iniciar/login"><span class='glyphicon glyphicon-log-in'></span>&nbsp;&nbsp;&nbsp;Iniciar sesión</a></li>
+                        </ul>
+                        {% endif %}
+                    </div><!--/.nav-collapse -->
+                </div><!--/.container-fluid -->
+            </nav>
+        </div> <!-- /container -->
+        <!-- Fin Menu -->
+
+        <!-- ========Bloque de elemento para renderizar las Vistas====== -->
+    <center>
+        <div style='width:97.5%' class="jumbotron">
+            {% block contenido %}{% endblock contenido %}
+        </div>
+    </center>
+    <!-- =========================================================== -->
+    <center>
+        <div>
+            {% block sesion %}{% endblock sesion %}
+        </div>
+    </center>
+    <div id="footer" style="text-align:center;width: 97.5%;">
+        <img src="{{STATIC_URL}}image/footer.png"/>
+    </div>
+
+</html>

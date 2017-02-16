@@ -1,0 +1,66 @@
+{% extends "base/base.html" %} <!-- Heredando (Bloque) plantilla index -->
+
+{% block title %}Registrar Autor{% endblock title%} <!--Bloque para definir el título-->
+
+
+{% block contenido %} <!-- Apertura de la carga de datos en el bloque 'contenido' de la plantilla 'base' -->
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/select2/select2.css">
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/select2/select2-bootstrap.css">
+	
+<script src="{{STATIC_URL}}js/select2/select2.js"></script>
+<script src="{{STATIC_URL}}js/select2/select2_locale_es.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#id_autor').alpha({allow:" -"}); //Valida solo valores tipo texto
+	    
+	// Validamos los campos del formulario
+	$("#registrar").click(function(e) {
+	   e.preventDefault();  // Para evitar que se envíe por defecto
+		    
+	    if($('#id_autor').val().trim() == ''){
+		bootbox.alert("Rellene el campo de autor", function () {
+		$('#id_autor').parent('div').addClass('has-error');
+		});
+		$('#id_autor').focus();
+	    }else{
+		$('#form_autor').submit();
+		}
+	});
+	
+	$('#volver').click(function(){
+	    url = '/autores/listar_autores'
+	    window.location = url
+	})
+	
+});
+</script>
+<body>
+    <form method="post" id="form_autor">
+	{% csrf_token %}
+	<div class='panel panel-default' style='width:60%'>
+		    <div class="panel-heading" style='font-size: 20px;font-weight:bold;'>Registrar Autor</div>
+		    <br>
+	<table style="text-align:center;border-collapse: separate;border-spacing: 5px 15px;">
+            <tr>
+		<td><input id="id_cod_autor" required name="cod_autor" type="hidden" value='{{num_autores}}'/>
+		</td>
+	    </tr>
+	    <tr>
+		<td>Autor:</td>
+		<td>
+			<input id="id_autor" required name="autor" type="text" />
+			<input type='hidden' id="id_user_update" name="user_create" value='{{user.id}}'/>
+		</td>
+	    </tr>
+	    <tr>
+		<td colspan='2'>
+			<input type="submit" id="registrar" value="Registrar"/>
+			<input type="button" id="volver" value="Volver" class="btn btn-primary"/>
+		</td>
+	    </tr>
+	</table>
+</div>
+    </form>
+</body>
+</html>
+{% endblock contenido %} <!-- Cierre de la carga de datos en el bloque 'contenido' de la plantilla 'base' -->

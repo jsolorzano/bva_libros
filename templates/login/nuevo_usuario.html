@@ -1,0 +1,361 @@
+<!--Modificacion: Fecha 22 de Junio 2015-->
+<!DOCTYPE html>
+{% extends 'base/base.html' %}
+
+{% block contenido %}
+<html>
+    <head>
+    </head>
+    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/select2/select2.css">
+    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/select2/select2-bootstrap.css">
+    <script src="{{STATIC_URL}}js/select2/select2.js"></script>
+    <script src="{{STATIC_URL}}js/select2/select2_locale_es.js"></script>
+    <script type="text/javascript">
+$(document).ready(function () {
+    $("select").select2();
+    $('#email').numeric(); //Valida solo valores tipo texto
+    $('#id_nombres').alpha({allow: " "}); //Valida solo valores tipo texto
+    $('#id_apellidos').alpha({allow: " "}); //Valida solo valores tipo texto
+    $('#id_nacionalidad').select2();
+
+    // Evento para reflejar desde la lista de usuarios, los datos correspondientes
+    $("table#list_user tbody tr td").on('click', 'img.modificar', function () {
+        var aPos = Lusuarios.fnGetPosition(this.parentNode.parentNode);
+        var oData = Lusuarios.fnGetData(aPos);
+
+        $("#email").val(oData[1].trim()).attr('readonly', 'true');
+        $("#username_id").val(oData[2].trim()).attr('readonly', 'true');
+        $("#valor").val(oData[7].trim());
+        $("#first_name").val(oData[3].trim()).attr('readonly', 'true');
+        $("#last_name").val(oData[4].trim()).attr('readonly', 'true');
+        $("#registrar").val("Actualizar");
+        $("#titulo").text("Actualizar");
+        $("#grupo").select2('val', '1');
+        $("#div_grupo").css('display', 'none');
+
+        if (oData[6].trim() == "Activo") {
+            //alert("Es activo");
+            $("#is_active").select2('val', '1');
+        } else {
+            $("#is_active").select2('val', '2');
+        }
+
+    });
+
+    var Lusuarios = $('#list_user').dataTable({
+        "iDisplayLength": 5,
+        "iDisplayStart": 0,
+        "sPaginationType": "full_numbers",
+        "aLengthMenu": [5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+        "oLanguage": {"sUrl": "/static/js/es.txt"},
+        "aoColumns": [
+            {"sClass": "registro center", "sWidth": "1%"},
+            {"sClass": "registro center", "sWidth": "2%"},
+            {"sClass": "registro center", "sWidth": "10%"},
+            {"sClass": "registro center", "sWidth": "20%"},
+            {"sClass": "registro center", "sWidth": "20%"},
+            {"sClass": "registro center", "sWidth": "20%"},
+            {"sClass": "registro center", "sWidth": "5%"},
+            {"sClass": "registro center", "sWidth": "1%"},
+            {"sClass": "registro center", "sWidth": "1%"},
+        ]
+    });
+
+    $("#email").change(function (event) {
+        var cedula = $('#email').val();
+        //var hosting = $('#id_hosting').val(); // Captura del hosting (dominio)
+        var hosting = "consultaelectoral.bva.org.ve/cedula="
+        if (hosting) {
+            $.get("http://" + hosting + cedula, function (data) {
+                var option = "";
+                $.each(data, function (i) {
+                    $("#first_name").val(data[i].p_nombre + " " + data[i].s_nombre)
+                    $("#last_name").val(data[i].p_apellido + " " + data[i].s_apellido)
+                });
+                // Proceso para validar con la clase error 404 Not Found
+            }, 'json');
+        }
+    });
+
+    // Validamos los campos del formulario
+    $("#registrar").click(function (e) {
+        e.preventDefault();  // Para evitar que se envíe por defecto
+
+        if ($('#email').val().trim() == '' || $('#email').val().trim() == 0) {
+	    
+	    bootbox.alert("Rellene el campo de cédula", function () {
+	    }).on('hidden.bs.modal', function (event) {
+		$("#email").parent('div').addClass('has-error')
+		$('#email').val('')
+		$("#email").focus();
+	    });
+	    
+        } else if ($('#email').val().length < 6) {
+	    
+	    
+	    bootbox.alert("La cédula está incompleta", function () {
+	    }).on('hidden.bs.modal', function (event) {
+		$("#email").parent('div').addClass('has-error')
+		$('#email').val('')
+		$("#email").focus();
+	    });
+	    
+        } else if ($('#first_name').val().trim() == '') {
+	    
+	    bootbox.alert("Rellene el campo de nombres", function () {
+	    }).on('hidden.bs.modal', function (event) {
+		$("#first_name").parent('div').addClass('has-error')
+		$('#first_name').val('')
+		$("#first_name").focus();
+	    });
+	    
+        } else if ($('#last_name').val().trim() == '') {
+	    
+	    bootbox.alert("Rellene el campo de apellidos", function () {
+	    }).on('hidden.bs.modal', function (event) {
+		$("#last_name").parent('div').addClass('has-error')
+		$('#last_name').val('')
+		$("#last_name").focus();
+	    });
+	    
+        } else if ($('#username_id').val().trim() == '') {
+	    
+	    bootbox.alert("Rellene el campo de usuario", function () {
+	    }).on('hidden.bs.modal', function (event) {
+		$("#username_id").parent('div').addClass('has-error')
+		$('#username_id').val('')
+		$("#username_id").focus();
+	    });
+	    
+        } else if ($('#password').val() == '') {
+	    
+	    bootbox.alert("El campo contraseña no puede estar en blanco", function () {
+	    }).on('hidden.bs.modal', function (event) {
+		$("#password").parent('div').addClass('has-error')
+		$('#password').val('')
+		$("#password").focus();
+	    });
+	    
+        } else if ($('#grupo').val() == '0') {
+	    
+	    bootbox.alert("Debe seleccionar el campo grupo", function () {
+	    }).on('hidden.bs.modal', function (event) {
+		$("#grupo").parent('div').addClass('has-error')
+		$('#grupo').val('')
+		$("#grupo").focus();
+	    });
+	    
+        } else {
+
+            if ($("#valor").val() == "") {
+                //alert("Vacio");
+                var data_send = $('#form_usuario_register').serialize() + '&' + $.param({accion: 'guardar', 'csrfmiddlewaretoken': "{{ csrf_token }}"});
+            } else {
+                var data_send = $('#form_usuario_register').serialize() + '&' + $.param({accion: 'editar', 'csrfmiddlewaretoken': "{{ csrf_token }}"});
+            }
+
+            $.post("", data_send, function (response) {
+                if (response == 'exito') {
+                    bootbox.alert("Su Registro fue Exitoso ", function () {
+                        window.location = '/usuarios/nuevo_usuario'
+                    });
+                } else if (response == 'actualizar') {
+
+                    bootbox.confirm("¿Esta seguro que desea modificar el usuario " + $("#first_name").val() + " " + $("#last_name").val() + "?", function (result) {
+
+                        if (result === true) {
+                            bootbox.alert("Su Actualización fue Exitosa ", function () {
+                                window.location = '/usuarios/nuevo_usuario'
+                            });
+                        }
+                    });
+                } else if (response == 'existe') {
+		    
+		    bootbox.alert("Disculpe ya existe el usuario " + $("#username_id").val() + "", function () {
+		    }).on('hidden.bs.modal', function (event) {
+			$("#username_id").parent('div').addClass('has-error')
+			$('#username_id').val('')
+			$("#username_id").focus();
+		    });
+		    
+                }
+            });
+        }
+    });
+
+    //$('#nuevo').click(function () {
+    //    $("input").val("").removeAttr('readonly', 'true');
+    //    $("#registrar").val("Registrar");
+    //    $("#titulo").text("Registrar");
+    //    $("#nuevo").val("Limpiar");
+    //    $("#grupo").select2('val', '0');
+    //    $("#email").focus();
+    //    $("#div_grupo").css('display', 'block');
+    //});
+    
+    $('#volver').click(function(){
+        url = '/'
+        window.location = url
+    })
+    
+
+});
+    </script>
+    <body>
+        <br/>
+        <form method="post" id="form_usuario_register" class="form-horizontal">
+            {% csrf_token %}
+            <div class="panel panel-default" style='width:90%'>
+                
+                <div class="alert alert-dismissible" style="width:100%;color:#000000;font-size: 20px;background-color: #F7C385;">
+                    Solo se pueden crear usuarios de tipo Administrador&nbsp;&nbsp;
+                </div>
+		<div>
+                <label>Registro de Usuarios</label>
+                </div>
+		</br>
+		<div class="panel-body">
+		    <div class="form-inline">
+			<div class="form-group col-xs-6">
+			    <input type='hidden' id='valor' name='valor'/>
+			    <label>Cédula&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+			    <input class="form-control" type='text' style="width:80%" placeholder="Ejemplo: 12345678" id="email" maxlength="8" name="email" autofocus='true'/>
+			</div>
+			<div class="form-group col-xs-6">
+			    <label>&nbsp;&nbsp;Nombres&nbsp;</label>
+			    <input class="form-control" style="width:83%" type='text' placeholder="Nombres" id="first_name" name="first_name"/>                           
+			</div>
+		    </div>
+		    <br/>
+		    <br/>
+		    <div class="form-inline">
+			<br/>
+			<div class="form-group col-xs-6">
+			    <label>Apellidos&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <input class="form-control" style="width:80%" type='text' placeholder="Apellidos" id="last_name" name="last_name"/>
+			</div>
+			<div class="form-group col-xs-6">
+			    <label>&nbsp;&nbsp;Usuario&nbsp;&nbsp;&nbsp;</label>
+                            <input class="form-control" style="width:83%" type='text' placeholder="Usuario" id="username_id" name="username"/>
+			</div>
+		    </div>
+		    <br/>
+		    <br/>
+		    <br/>
+		    <div class="form-inline">
+			<div class="form-group col-xs-6">
+			    <label>Contraseña</label>
+                            <input class="form-control" style="width:80%" type='password' placeholder="Usuario" id="password" name="password"/>
+			</div>
+			<div class="form-group col-xs-6">
+			    <label>&nbsp;&nbsp;Estátus&nbsp;&nbsp;&nbsp;&nbsp;</label>
+			    <select id='is_active' name='is_active' style='width:83%;'>
+				<option value='1'>Activo</option>
+				<option value='2'>Inactivo</option>
+			    </select>
+			</div>
+		    </div>
+		    <br/>
+		    <br/>
+		    <br/>
+		    <div class="form-inline">
+			<div class="form-group col-xs-12" id='div_grupo' style='display: block'>
+			    <label>Grupo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+			    <select id='grupo' name='grupo' style='width:38%;' class="form-control input-sm"/>
+			    <option value='0'>----------------</option>
+			    {% for g in grupo %}
+			    {%if g.name != 'fiscales' %}
+			    <option value='{{g.id}}'>{{g.name}}</option>
+			    {% endif %}
+			    {% endfor %}
+			    </select>
+			</div>
+		    </div>
+		    <br/>
+		    <br/>
+		    <br/>
+		    <div class='div_button'>
+			<div class="form-group col-xs-12">
+			    <input class="form-control"  type='hidden' placeholder="user" maxlength="50" id="id_user_create" name="user_create" value='{{user.id}}'/>
+			    <input type="button" value="Registrar" id='registrar' class='btn btn-primary guardar' style='margin: auto'/>
+			    <input type="reset" id="nuevo" class="btn btn-success" value="Limpiar"/>
+			    <input type="button" id="volver" class="btn btn-warning" value="Volver"/>
+			</div>
+		    </div>
+		</div>
+                </div>
+                    
+		<div style='width:90%'>
+		    <img class='img_user' src="{{STATIC_URL}}image/list_user.png" alt="imagen"><label>Listado de Usuarios</label>
+                    <!--Listado de usuarios-->
+                    <table style="width:100%;" border="0" class="table table-bordered table-striped table-hover table-condensed dt-responsive table-responsive" id='list_user'>	  
+                        <thead>
+                            <tr>
+                                <th colspan=8>Listado de Usuarios</th>
+                            </tr>
+                            <tr>
+                                <th>Itém</th>
+                                <th>Cédula</th>
+                                <th>Login</th>
+                                <th>Nombres</th>
+                                <th>Apellidos</th>
+                                <th>Grupo</th>
+                                <th>Estatus</th>
+                                <th hidden='hidden'>ID</th>
+                                <th>Editar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for id,email,username,first_name,last_name,is_active,name in listar_usuarios %}
+				
+				<tr>
+				    <td>{{ forloop.counter }}</td>
+				    <td>{{ email }}</td>
+				    <td>{{ username }}</td>
+				    <td>{{ first_name }}</td>
+				    <td>{{ last_name }}</td>
+				    <td>
+					{% if name == "administrador"%}
+					<span style='color:#267933;'>Administrador</span>
+					{% endif %}
+					{% if name == "fiscales"%}
+					<span style='color:#930A0A;'>Fiscal</span>
+					{% endif %}
+					{% if name == "sistematizador"%}
+					<span style='color:#0A00B5;'>Sistematizador</span>
+					{% endif %}
+				    </td>
+				    <td>
+					{% if is_active == True %}
+					Activo
+					{% else %}
+					Inactivo
+					{% endif %}
+				    </td>
+				    <td hidden='hidden'>{{ id }}</td>
+				    <td>
+							
+					{% if username != 'sundde' %}
+					
+					<img class='modificar' style='cursor: pointer;' src='/static/image/editar.png' width='27px;' height='27px;' title='Editar datos de {{ first_name }} {{ last_name }}'/>
+					
+					{%else%}
+					<img style='cursor: pointer;' src='/static/image/block.png' width='27px;' height='27px;' title='Acceso denegado'/>
+					{% endif %}
+				    
+				    </td>
+				</tr>
+				
+				
+                            {% endfor %}
+                        </tbody>
+                    </table>
+		    </div>
+		    <br/>
+		    <br/>
+		    <br/>
+                </div>
+        </form>
+    </body>
+</html>
+{% endblock %}

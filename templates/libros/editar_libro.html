@@ -1,0 +1,187 @@
+{% extends "base/base.html" %} <!-- Heredando (Bloque) plantilla index -->
+
+{% block title %}Actualizar Libro{% endblock title%} <!--Bloque para definir el título-->
+
+
+
+{% block contenido %} <!-- Apertura de la carga de datos en el bloque 'contenido' de la plantilla 'base' -->
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/select2/select2.css">
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/select2/select2-bootstrap.css">
+	
+<script src="{{STATIC_URL}}js/select2/select2.js"></script>
+<script src="{{STATIC_URL}}js/select2/select2_locale_es.js"></script>
+<script>
+	$(document).ready(function() {
+		$("select").select2();
+		$("#id_configuracion").attr('class','active');
+		$('#id_linea').alpha({allow: " "});
+		$('#id_presidente').alpha({allow: " "});
+		$('#id_telefono').numeric({allow: ""}).attr('maxlength','11');
+	});
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#titulo').numeric(); //Valida solo valores tipo texto
+	$('#autor').alpha({allow:" "}); //Valida solo valores tipo texto
+	$('#id_apellidos').alpha({allow:" "}); //Valida solo valores tipo texto
+	$('#id_telefono').numeric(); //Valida solo valores tipo texto
+	$('#id_nacionalidad').select2();
+	
+	// Pre-selección de opciones
+	$("#autor").select2('val',$("#id_autor").val());
+	$("#editorial").select2('val',$("#id_editorial").val());
+	$("#categoria").select2('val',$("#id_categoria").val());
+	$("#sede").select2('val',$("#id_sede").val());
+	
+	// Aplicación de bootstrap-datepicker
+	//var startDate = new Date('01/01/2015');
+	var FromEndDate = new Date();
+	var ToEndDate = new Date();
+	
+	ToEndDate.setDate(ToEndDate.getDate()+365);
+	
+	$('#fecha_pub').datepicker({
+	  format: "dd/mm/yyyy",
+	  //endDate: FromEndDate,
+	  language: "es",
+	  autoclose: true,
+	})
+	
+	//$("#id_cedula").change(function() {
+	//    $.get('/fiscales/buscar/', {'cedula': $('#id_cedula').val(), 'bandera': 'true'}, function (response) {
+	//		if (response == 'existe') {
+	//			bootbox.alert("Disculpe, la cédula ya existe...", function () {
+	//			$('#id_cedula').val("");
+	//			$("#id_nombres").val("")
+	//			$("#id_apellidos").val("")
+	//			$('#id_cedula').parent('div').addClass('has-error');
+	//			});
+	//		}
+	//    });
+	//});
+	    
+	// Validamos los campos del formulario
+	$("#actualizar").click(function(e) {
+	   e.preventDefault();  // Para evitar que se envíe por defecto
+		    
+	    if($('#titulo').val().trim() == ''){
+		bootbox.alert("Rellene el campo de título", function () {
+		$('#titulo').parent('div').addClass('has-error');
+		});
+		$('#titulo').focus();
+	    }else if($('#autor').val().trim() == ''){
+		bootbox.alert("Rellene el campo de autor", function () {
+		$('#autor').parent('div').addClass('has-error');
+		});
+		$('#autor').focus();
+	    }else if($('#fecha_pub').val().trim() == ''){
+		bootbox.alert("Rellene el campo de fecha", function () {
+		$('#fecha_pub').parent('div').addClass('has-error');
+		});
+		$('#fecha_pub').focus();
+	    }else if($('#editorial').val().trim() == ''){
+		bootbox.alert("Rellene el campo de editorial", function () {
+		$('#editorial').parent('div').addClass('has-error');
+		});
+		$('#editorial').focus();
+	    }else if ($('#categoria').val() == '0') {
+		bootbox.alert("Seleccione la categoría", function () {
+		$('#categoria').parent('div').addClass('has-error');
+		});
+		$('#categoria').focus();
+	    }else if ($('#sede').val() == '0') {
+		bootbox.alert("Seleccione la sede", function () {
+		$('#sede').parent('div').addClass('has-error');
+		});
+		$('#sede').focus();
+	    }else{
+		$('#form_libro').submit();
+		}
+	});
+	
+	$('#volver').click(function(){
+	    url = '/libros/listar_libros'
+	    window.location = url
+	})
+	
+});
+</script>
+    <form method="post" id="form_libro">
+	{% csrf_token %}
+	<div class='panel panel-default' style='width:60%'>
+		    <div class="panel-heading" style='font-size: 20px;font-weight:bold;'>Actualizar libro</div>
+		    <br>
+	<table style="text-align:center;border-collapse: separate;border-spacing: 5px 15px;">
+        <tr>
+            <td>Título:</td>
+			<td>
+				<input id="cod_libro" name="cod_libro" type="hidden" value="{{obj_rlibro.cod_libro}}"/>
+				<input id="titulo" required name="titulo" type="text" value='{{obj_rlibro.titulo}}'/>
+			</td>
+	    </tr>
+	    <tr>
+			<td>Autor:</td>
+			<td>
+				<select id='autor' name='autor'>
+				<option value='0'>-----------------</option>
+				{% for au in autores %}
+				<option value='{{au.cod_autor}}'>{{au.autor}}</option>
+				{% endfor %}
+				</select>
+			</td>
+	    </tr>
+	    <tr>
+			<td>Fecha de publicación:</td>
+			<td>
+				<input id="fecha_pub" name="fecha_pub" type="text" value='{{obj_rlibro.fecha_pub |date:"SHORT_DATE_FORMAT"}}'/>
+			</td>
+	    </tr>
+	    <tr>
+			<td>Editorial:</td>
+			<td>
+				<select id='editorial' name='editorial'>
+				<option value='0'>-----------------</option>
+				{% for ed in editoriales %}
+				<option value='{{ed.cod_editorial}}'>{{ed.editorial}}</option>
+				{% endfor %}
+				</select>
+			</td>
+	    </tr>
+	    <tr>
+			<td>Categoría:</td>
+			<td>
+				<select id='categoria' name='categoria'>
+				<option value='0'>-----------------</option>
+				{% for c in categorias %}
+				<option value='{{c.cod_categoria}}'>{{c.categoria}}</option>
+				{% endfor %}
+				</select>
+			</td>
+	    </tr>
+		<tr>
+			<td>Sede:</td>
+			<td>
+				<select id='sede' name='sede'>
+				<option value='0'>-----------------</option>
+				{% for s in sedes %}
+				<option value='{{s.cod_sede}}'>{{s.sede}}</option>
+				{% endfor %}
+				</select>
+			</td>
+	    </tr>
+			<input type='hidden' id="id_user_create" name="user_create" value='{{obj_reje.user_create.id}}'/>
+			<input type='hidden' id="id_user_update" name="user_update" value='{{user.id}}'/>
+			<input type='hidden' id="id_autor" value='{{obj_rlibro.autor}}'/>
+			<input type='hidden' id="id_editorial" value='{{obj_rlibro.editorial}}'/>
+			<input type='hidden' id="id_categoria" value='{{obj_rlibro.categoria}}'/>
+			<input type='hidden' id="id_sede" value='{{obj_rlibro.sede}}'/>
+	    <tr>
+			<td colspan='2'>
+				<input type="submit" id="actualizar" value="Actualizar"/>
+				<input type="button" id="volver" value="Volver" class="btn btn-primary"/>
+			</td>
+	    </tr>
+	</table>
+</div>
+    </form>
+{% endblock contenido %} <!-- Cierre de la carga de datos en el bloque 'contenido' de la plantilla 'base' -->

@@ -1,0 +1,62 @@
+{% extends "base/base.html" %} <!-- Bloque, Plantilla base -->
+    {% block title %}Registrar Municipio{% endblock %}
+    
+    {% block contenido %}
+    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/select2/select2.css">
+    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/select2/select2-bootstrap.css">
+	
+    <script src="{{STATIC_URL}}js/select2/select2.js"></script>
+    <script src="{{STATIC_URL}}js/select2/select2_locale_es.js"></script>
+    <script>
+		$(document).ready(function() {
+			$("select").select2();
+			$("#id_configuracion").attr('class','active');
+			$('#cod_municipio').numeric({allow: ""});
+			$('#municipio').alpha({allow: " "});
+		});
+    </script>
+	<form method="post">
+	    {% csrf_token %}
+	    <div class='panel panel-default' style='width:60%'>
+		    <div class="panel-heading" style='font-size: 20px;font-weight:bold;'>Registrar Municipio</div>
+		    <br>
+	    <table style="text-align:center;border-collapse: separate;border-spacing: 5px 15px;">
+		<tr>
+		    <td>Codigo</td>
+		    <td><input type='text' required=True id='cod_municipio' name='cod_municipio'></td>
+		</tr>
+		<tr>
+		    <td>Estado</td>
+		    <td>
+			<select id='id_estado' name='estado' onchange="cargar_circuitos($('#id_estado').val())">
+			    <option value=''>------------------------</option>
+			    {% for est in lista_estado %}
+				<option value='{{est.cod_estado}}'>{{est.estado}}</option>
+			    {% endfor %}
+			</select>
+		    </td>
+		</tr>
+		<tr>
+		    <td>Circuito</td>
+		    <td>
+			<select id='id_circuito' name='circuito'>
+			    <option value=''>------------------------</option>
+			    {% for cir in lista_circuito %}
+				<option value='{{cir.codigo}}'>{{cir.circuito}}</option>
+			    {% endfor %}
+			</select>
+		    </td>
+		</tr>
+		<tr>
+		    <td>Municipio</td>
+		    <td><input type='text' required=True id='municipio' name='municipio'></td>
+		</tr>
+		<tr>
+		    <td colspan='3' style='text-align:right;'>
+		    	<input type="submit" value="Registrar"/>
+		    </td>
+		</tr>
+	    </table>
+	</div>
+	</form>
+    {% endblock contenido%}
