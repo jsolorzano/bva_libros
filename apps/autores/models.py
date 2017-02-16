@@ -3,7 +3,7 @@ from django.db import models
 from apps.bitacora.models import Bitacora
 from django.contrib.auth.models import User
 
-# Create your models here.
+# Create your models here. (Crea tus modelos aquí)
 
 
 class Autor(models.Model):
